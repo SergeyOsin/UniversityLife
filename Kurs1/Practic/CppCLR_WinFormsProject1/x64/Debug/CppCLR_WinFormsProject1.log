@@ -1,0 +1,5 @@
+﻿  MainForms.cpp
+C:\Users\Sereo\source\repos\CppCLR_WinFormsProject1\CppCLR_WinFormsProject1\Figure.h(5,18): warning C4570: 'Figure': is not explicitly declared as abstract but has abstract functions
+C:\Users\Sereo\source\repos\CppCLR_WinFormsProject1\CppCLR_WinFormsProject1\Form1.h(403,32): warning C4101: 'colors': unreferenced local variable
+  AssemblyInfo.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  CppCLR_WinFormsProject1.vcxproj -> C:\Users\Sereo\source\repos\CppCLR_WinFormsProject1\x64\Debug\CppCLR_WinFormsProject1.exe

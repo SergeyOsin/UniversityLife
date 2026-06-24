@@ -1,0 +1,46 @@
+  CppCLR_WinFormsProject1.Form1.resources - Embedded, ContainedInManifestFile, 
+ImageRuntimeVersion: v4.0.30319
+Assembly CppCLR_WinFormsProject1, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class Figure: AutoLayout, AnsiClass, Class, Public, Abstract, BeforeFieldInit
+    Void .ctor(Int32, Int32, Int32, System.Drawing.Color, System.Drawing.Color): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Draw(Graphics): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    Hide(Graphics): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    Move(Int32, Int32, Graphics): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+Class BorderException: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Exception
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class InvalidCoordinatesException: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Exception
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class MyRectangle: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :Figure
+    Void .ctor(Int32, Int32, Int32, System.Drawing.Color, System.Drawing.Color): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Draw(Graphics): PrivateScope, Public, Virtual, HideBySig
+    Hide(Graphics): PrivateScope, Public, Virtual, HideBySig
+    Move(Int32, Int32, Graphics): PrivateScope, Public, Virtual, HideBySig
+Class Triangle: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :Figure
+    Void .ctor(Int32, Int32, Int32, System.Drawing.Color): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Draw(Graphics): PrivateScope, Public, Virtual, HideBySig
+    Hide(Graphics): PrivateScope, Public, Virtual, HideBySig
+    Move(Int32, Int32, Graphics): PrivateScope, Public, Virtual, HideBySig
+Class CppCLRWinFormsProject.Form1: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
