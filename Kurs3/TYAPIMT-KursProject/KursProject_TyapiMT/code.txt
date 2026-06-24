@@ -1,0 +1,7 @@
+var a,b,i: integer;
+begin
+read(a);
+b=a*2;
+a=b+a;
+write(a,b);
+end

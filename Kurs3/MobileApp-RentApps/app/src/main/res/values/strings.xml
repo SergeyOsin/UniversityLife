@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Аренда помещений</string>
+    <string name="head">№ квартиры | Площадь | Аренда (месяц) | Комнат | Статус</string>
+    <string name="NumbApps">Номер </string>
+    <string name="Num">Номер квартиры</string>
+    <string name="Area">Площадь </string>
+    <string name="Rooms">Комнат </string>
+    <string name="CntRoom">Количество комнат</string>
+    <string name="arrend">Арендована?</string>
+    <string name="Coint">Аренда </string>
+    <string name="Rented">Статус </string>
+    <string name="AddBut">Добавить</string>
+    <string name="DelBut">Удалить</string>
+    <string name="ChangeBut">Изменить</string>
+    <string name="FindBut">Найти</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

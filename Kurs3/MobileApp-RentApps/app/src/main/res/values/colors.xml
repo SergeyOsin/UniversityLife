@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="arlekin">#44944A</color>
+    <color name="Malin">#B3446C</color>
+    <color name="cream">#F5FFFA</color>
+    <color name="greenblue">#00677E</color>
+    <color name="skyblue">#2271B3</color>
+    <color name="mindal">#FFEBCD</color>
+    <color name="grey">#7F7679</color>
+    <color name="blue">#B0E0E6</color>
+    <color name="purple">#B123DD</color>
+</resources>
