@@ -1,0 +1,113 @@
+html{
+  height: 100%;
+  width: 100%;
+  background-color: rgba(227, 221, 206, 1);
+}
+
+header{
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-kerning: auto;
+  font-synthesis-style: initial;
+  font-size: medium;
+  font-variant: normal;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+hr{
+  heigth: 10;
+  width: 100%;
+  color: black;
+  border-top: 3px solid black;
+}
+
+.text1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Центрируем слова по горизонтали */
+  border-radius: 8px;
+  gap: 440px;
+  margin: 0 auto;;
+}
+
+.word {
+  white-space: nowrap;
+}
+
+.exercise {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  padding-left: 100px;
+  padding-top: 20px;
+  padding-right: 100px;
+}
+
+#input0, #output0 {
+  width: 450px;
+  height: 270px;
+  top: 131px;
+  border-radius: 8px;
+  border: 2px solid rgba(111, 81, 93, 1);
+  resize: none;
+  background-color: rgba(249, 245, 234, 1);
+  padding: 10px;
+  margin-bottom: 50px;
+  font-size: 18px;
+  color: black;
+}
+
+#input0:active{
+  cursor: pointer;
+  border-color: rgba(111, 81, 93, 1);
+}
+
+.buttons{
+  display: flex;
+  position: fixed;
+  gap: 80px;
+  resize: none;
+}
+
+.clear{
+  width: 125px;
+  height: 47px;
+  margin-left: 156px;
+  border-radius: 20px;
+  background-color: rgba(157, 117, 115, 1);
+  font-family: Jostfin Sans;
+  font-size: 18px;
+  line-height: 100%;
+  text-align: center;
+  color: rgba(249, 245, 234, 1);
+  border: 2px;
+}
+
+.create{
+  width: 190px;
+  height: 47px;
+  border-radius: 10px;
+  border: 2px;
+  background-color: rgba(111, 81, 93, 1);
+  font-family: jostfin-sans;
+  font-size: 18px;
+  text-align: center;
+  line-height: 100%;
+  color: rgba(249, 245, 234, 1);
+}
+
+.clear:hover, .create:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+.clear:active, .create:active{
+  background-color: rgba(249, 245, 234, 1);
+  color: black;
+}

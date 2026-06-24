@@ -1,0 +1,16 @@
+C:\Users\Sereo\source\repos\Lab8\Lab8\bin\Debug\net8.0-windows\Lab8.exe
+C:\Users\Sereo\source\repos\Lab8\Lab8\bin\Debug\net8.0-windows\Lab8.deps.json
+C:\Users\Sereo\source\repos\Lab8\Lab8\bin\Debug\net8.0-windows\Lab8.runtimeconfig.json
+C:\Users\Sereo\source\repos\Lab8\Lab8\bin\Debug\net8.0-windows\Lab8.dll
+C:\Users\Sereo\source\repos\Lab8\Lab8\bin\Debug\net8.0-windows\Lab8.pdb
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.Form1.resources
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.csproj.GenerateResource.cache
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.AssemblyInfoInputs.cache
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.AssemblyInfo.cs
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.csproj.CoreCompileInputs.cache
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.dll
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\refint\Lab8.dll
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.pdb
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\Lab8.genruntimeconfig.cache
+C:\Users\Sereo\source\repos\Lab8\Lab8\obj\Debug\net8.0-windows\ref\Lab8.dll

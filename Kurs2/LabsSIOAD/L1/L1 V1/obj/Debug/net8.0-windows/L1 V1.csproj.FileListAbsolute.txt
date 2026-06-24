@@ -1,0 +1,16 @@
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\bin\Debug\net8.0-windows\L1 V1.exe
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\bin\Debug\net8.0-windows\L1 V1.deps.json
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\bin\Debug\net8.0-windows\L1 V1.runtimeconfig.json
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\bin\Debug\net8.0-windows\L1 V1.dll
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\bin\Debug\net8.0-windows\L1 V1.pdb
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1_V1.Form1.resources
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.csproj.GenerateResource.cache
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.AssemblyInfoInputs.cache
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.AssemblyInfo.cs
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.csproj.CoreCompileInputs.cache
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.dll
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\refint\L1 V1.dll
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.pdb
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\L1 V1.genruntimeconfig.cache
+C:\Users\Sereo\source\repos\L1 V1\L1 V1\obj\Debug\net8.0-windows\ref\L1 V1.dll
