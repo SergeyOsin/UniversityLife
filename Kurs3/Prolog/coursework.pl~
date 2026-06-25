@@ -1,0 +1,180 @@
+knf :-
+    format('Введите логическое выражение (пример: "A and (B implies not C)")~n'),
+    format('Используйте операторы: and, or, not, implies~n'),
+    format('Для выхода введите "exit."~n~n'),
+    read_line_to_codes(user_input, Codes),
+    codes_to_string(Codes, Input),
+    (Input = "exit" -> true; process_input(Input), knf).
+
+% Обработка входных данных
+process_input(Input) :-
+    (tokenize(Input, Tokens) ->
+        (validate_tokens(Tokens) ->
+            (parse_expression(Tokens, Expr) ->
+                format('~nПарсинг успешен: '),
+                write_expression(Expr), nl,
+                convert_to_knf(Expr, KNF),
+                format('~nКонъюнктивная нормальная форма (КНФ): '),
+                write_expression(KNF), nl, nl
+            ;
+                writeln('Ошибка: Синтаксическая ошибка в выражении')
+            )
+        ;
+            writeln('Ошибка: Недопустимые токены в выражении')
+        )
+    ;
+        writeln('Ошибка: Неправильный формат ввода')
+    ).
+
+% Токенизация входной строки
+tokenize(Input, Tokens) :-
+    string_chars(Input, Chars),d
+    tokenize_chars(Chars, Tokens).
+
+tokenize_chars([], []).
+tokenize_chars([' '|Chars], Tokens) :- tokenize_chars(Chars, Tokens).
+tokenize_chars(['('|Chars], ['('|Tokens]) :- tokenize_chars(Chars, Tokens).
+tokenize_chars([')'|Chars], [')'|Tokens]) :- tokenize_chars(Chars, Tokens).
+tokenize_chars([Ch|Chars], [Token|Tokens]) :-
+    char_type(Ch, alpha),
+    take_while(alnum, [Ch|Chars], TokenChars, Rest),
+    atom_chars(Token, TokenChars),
+    tokenize_chars(Rest, Tokens).
+
+% Исправленная версия take_while/4
+take_while(_, [], [], []).
+take_while(Type, [Ch|Chars], [Ch|RestToken], Rest) :-
+    (   Type = alnum 
+    ->  (char_type(Ch, alnum) ; Ch = '_') % Правильное условие
+    ),
+    take_while(Type, Chars, RestToken, Rest).
+take_while(_, Chars, [], Chars). % Случай, когда символ не соответствует
+
+% Валидация токенов
+validate_tokens(Tokens) :-
+    check_balanced_parentheses(Tokens, 0),
+    check_valid_tokens(Tokens).
+
+check_balanced_parentheses([], 0).
+check_balanced_parentheses(['('|T], N) :- N1 is N + 1, check_balanced_parentheses(T, N1).
+check_balanced_parentheses([')'|T], N) :- N > 0, N1 is N - 1, check_balanced_parentheses(T, N1).
+check_balanced_parentheses([H|T], N) :- H \= '(', H \= ')', check_balanced_parentheses(T, N).
+
+check_valid_tokens([]).
+check_valid_tokens([Token|Tokens]) :-
+    valid_token(Token),
+    check_valid_tokens(Tokens).
+
+valid_token('('). valid_token(')').
+valid_token(and). valid_token(or). valid_token(not). valid_token(implies).
+valid_token(Token) :- atom(Token), \+ keyword(Token).
+
+keyword(and). keyword(or). keyword(not). keyword(implies).
+
+% Парсинг выражения (DCG)
+parse_expression(Tokens, Expr) :- phrase(expression(Expr), Tokens).
+
+expression(Expr) --> impl_expr(Expr).
+
+impl_expr(Expr) --> 
+    or_expr(Left),
+    [implies],
+    impl_expr(Right),
+    { Expr = implies(Left, Right) }.
+impl_expr(Expr) --> or_expr(Expr).
+
+or_expr(Expr) -->
+    and_expr(Left),
+    or_expr_tail(Left, Expr).
+
+or_expr_tail(Left, Expr) -->
+    [or],
+    and_expr(Right),
+    or_expr_tail(or(Left, Right), Expr).
+or_expr_tail(Expr, Expr) --> [].
+
+and_expr(Expr) -->
+    factor(Left),
+    and_expr_tail(Left, Expr).
+
+and_expr_tail(Left, Expr) -->
+    [and],
+    factor(Right),
+    and_expr_tail(and(Left, Right), Expr).
+and_expr_tail(Expr, Expr) --> [].
+
+factor(not(Expr)) --> [not], factor(Expr).
+factor(Expr) --> primary(Expr).
+
+primary(Expr) --> ['('], expression(Expr), [')'].
+primary(Var) --> [Var], { atom(Var), \+ keyword(Var) }.
+
+% Преобразование в КНФ
+convert_to_knf(Expr, KNF) :-
+    remove_implications(Expr, Expr1),
+    apply_demorgan(Expr1, Expr2),
+    distribute_ors(Expr2, KNF).
+
+remove_implications(implies(A, B), or(not A, B)) :- !.
+remove_implications(not A, not A1) :- !, remove_implications(A, A1).
+remove_implications(and(A, B), and(A1, B1)) :-
+    remove_implications(A, A1),
+    remove_implications(B, B1).
+remove_implications(or(A, B), or(A1, B1)) :-
+    remove_implications(A, A1),
+    remove_implications(B, B1).
+remove_implications(A, A).
+
+apply_demorgan(not(and(A, B)), or(not A, not B)) :- !.
+apply_demorgan(not(or(A, B)), and(not A, not B)) :- !.
+apply_demorgan(not(not A), A1) :- !, apply_demorgan(A, A1).
+apply_demorgan(and(A, B), and(A1, B1)) :-
+    apply_demorgan(A, A1),
+    apply_demorgan(B, B1).
+apply_demorgan(or(A, B), or(A1, B1)) :-
+    apply_demorgan(A, A1),
+    apply_demorgan(B, B1).
+apply_demorgan(not A, not A) :- atom(A), !.
+apply_demorgan(A, A).
+
+distribute_ors(or(and(A, B), C), and(NewA, NewB)) :- !,
+    distribute_ors(or(A, C), NewA),
+    distribute_ors(or(B, C), NewB).
+distribute_ors(or(A, and(B, C)), and(NewA, NewB)) :- !,
+    distribute_ors(or(A, B), NewA),
+    distribute_ors(or(A, C), NewB).
+distribute_ors(or(A, B), or(A1, B1)) :-
+    distribute_ors(A, A1),
+    distribute_ors(B, B1).
+distribute_ors(and(A, B), and(A1, B1)) :-
+    distribute_ors(A, A1),
+    distribute_ors(B, B1).
+distribute_ors(not A, not A1) :- distribute_ors(A, A1).
+distribute_ors(A, A).
+
+% Вывод выражений
+write_expression(not Expr) :- 
+    write('not '),
+    write_expression(Expr).
+write_expression(and(A, B)) :-
+    write('('),
+    write_expression(A),
+    write(' and '),
+    write_expression(B),
+    write(')').
+write_expression(or(A, B)) :-
+    write('('),
+    write_expression(A),
+    write(' or '),
+    write_expression(B),
+    write(')').
+write_expression(implies(A, B)) :-
+    write('('),
+    write_expression(A),
+    write(' implies '),
+    write_expression(B),
+    write(')').
+write_expression(Atom) :- atom(Atom), write(Atom).
+
+% Вспомогательные предикаты
+codes_to_string(Codes, String) :- string_codes(String, Codes).

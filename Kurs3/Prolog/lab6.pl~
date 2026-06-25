@@ -1,0 +1,82 @@
+
+repeatChar(_, 0).
+
+repeatChar(Char, N):-
+    write(Char),
+    N1 is N - 1,
+    repeatChar(Char, N1).
+
+
+writeTree(nil, _).
+
+writeTree(node(Value, Left, Right), Lvl):-
+    repeatChar('  |', Lvl), write('--'), write(Value), nl,
+    Lvl_ is Lvl + 1,
+    writeTree(Left, Lvl_),
+    writeTree(Right, Lvl_).
+
+
+addList([], L, L).
+addList([E|List1], List2, [E|List3]):-
+    addList(List1, List2, List3).
+
+findElement(nil, _, _, Result):- Result = [].
+
+findElement(node(Value, Left, Right), Input, Cnt, Result):-
+    Input=Value,
+    findElement(Left, Input, Cnt, Result1),
+    findElement(Right, Input, Cnt, Result2),
+    addList(Result1, Result2, Result3),
+    Result = [Cnt | Result3].
+
+findElement(node(_, Left, Right), Input, Cnt, Result):-
+    Cnt_ is Cnt + 1,
+    findElement(Left, Input, Cnt_, Result1),
+    findElement(Right, Input, Cnt_, Result2),
+    addList(Result1, Result2, Result).
+
+
+
+minElement([], Min1, Min1).
+
+minElement([Head|Tail], Min1, Result):-
+    Head < Min1,
+    Min2 = Head,
+    minElement(Tail, Min2, Result).
+
+minElement([_|Tail], Min1, Result):-
+    minElement(Tail, Min1, Result).
+
+
+
+answer([], Answer):- Answer = -1.
+
+answer([Head|Tail], Answer):-
+    minElement(Tail, Head, Answer).
+
+
+
+program:-
+    write("Напишите значение узла: "),
+    read(Value),
+
+    Tree = node(6,
+        node(0,
+            node(10,
+                node(20, nil, nil),
+                node(140, nil, nil)),
+            node(54,
+                node(8, nil, nil),
+                nil)
+            ),
+        node(8, nil, nil)),
+
+    findElement(Tree, Value, 0, Result),
+     write(Result), nl,
+
+
+    answer(Result, Answer),
+    write("Длина короткого пути: "),
+    write(Answer), nl,
+
+     writeTree(Tree, 1).

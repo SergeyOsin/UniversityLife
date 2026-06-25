@@ -1,0 +1,26 @@
+readList(List):-
+    read(Elem),
+    Elem\==exit,
+    List=[Elem|_],
+    readList([Elem|Tail]).
+
+readList([]).
+
+countElem(_,[],Count,Count).
+
+countElem(Elem,[Elem|Tail],StartCount,FinalCount):-
+    NewCount is StartCount + 1,
+    countElem(Elem,Tail,NewCount,FinalCount).
+
+countElem(Elem,[_|Tail],StartCount,FinalCount):-
+    countElem(Elem,Tail,StartCount,FinalCount).
+
+program:-
+    readList(List),
+    writeln(List),
+    write("Введите элемент: "),
+    read(Elem),
+    countElem(Elem,List,0,FinalCount),
+    write("Количество "), write(Elem), write(" = "),
+    write(FinalCount).
+

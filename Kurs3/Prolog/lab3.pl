@@ -1,0 +1,30 @@
+twolastElements([Y,X],Y,X).
+twolastElements([_|Tail],Y,X):-
+    twolastElements(Tail,Y,X).
+
+read_from_console(List) :-
+    write('Введите целое число или "exit" для выхода: '),
+    read(X),
+    X \== exit,
+    List = [X|New_List],
+    read_from_console(New_List).
+
+read_from_console([]).
+
+checkList([_|Tail]):-Tail\==[].
+
+sumElem(List,Sum):-
+    twolastElements(List,PrelastElem,LastElem),
+    write("Предпоследний элемент: "),writeln(PrelastElem),
+    write("Последний элемент: "), writeln(LastElem),
+    Sum is PrelastElem+LastElem.
+
+main:-
+    read_from_console(List),
+    write("Введенный список: "), writeln(List),
+    checkList(List),
+    sumElem(List,Sum),
+    write("Сумма равна "), writeln(Sum).
+
+main:-
+    write("В списке должно быть не менее 2 элементов!"), !.

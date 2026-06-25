@@ -1,0 +1,135 @@
+:- dynamic answer/2.
+:- dynamic car_stats/2.
+:- dynamic car/1.
+
+init_stats :-
+    clause(car(Name), _),
+    not(car_stats(Name, _)),
+    assertz(car_stats(Name, 0)),
+    fail.
+init_stats.
+
+get_popularity(Car, C) :-
+    car_stats(Car, C), !.
+get_popularity(_, 0).
+
+update_popularity([]).
+update_popularity([H|T]) :-
+    retract(car_stats(H, C)), !,
+    NewC is C + 1,
+    assertz(car_stats(H, NewC)),
+    update_popularity(T).
+update_popularity([H|T]):-
+    assertz(car_stats(H, 1)),
+    update_popularity(T).
+
+main :-
+    init_stats,
+    nl,
+    writeln("Экспертная система - автомобили"),
+    writeln("1. Начать консультацию"),
+    writeln("2. Список всех авто по популярности"),
+    writeln("Любой другой символ - выход"),
+    write("Введите номер: "),
+    read(Num),
+    start(Num).
+
+start(1) :- run.
+start(2) :-
+    writeln(""),
+    writeln("Все автомобили (от самых популярных):"),
+    show_all_by_popularity,
+    main.
+start(_) :- writeln("Консультация завершена").
+
+run :-
+    retractall(answer(_, _)),
+    ask_base,
+    nl,
+    findall(C-Name, (clause(car(Name), _), get_popularity(Name, C)), Pairs),
+    keysort(Pairs, SortedAsc),
+    reverse(SortedAsc, SortedDesc),
+
+    findall(Car, (member(_-Car, SortedDesc), car(Car)), Matches),
+
+    Matches\=[],
+
+    update_popularity(Matches),
+
+    writeln("Подходящие варианты:"),
+    print_matches(Matches),
+    nl,
+    main.
+
+run:-
+    writeln("Не найдено вариантов"),
+    main.
+
+print_matches([]).
+print_matches([Name|T]) :-
+    get_popularity(Name, C),
+    format("- ~w (выбрано раз: ~d)~n", [Name, C]),
+    print_matches(T).
+
+show_all_by_popularity :-
+    findall(C-Name, (clause(car(Name), _), get_popularity(Name, C)), Pairs),
+    keysort(Pairs, SortedAsc),
+    reverse(SortedAsc, SortedDesc),
+    print_sorted_list(SortedDesc).
+
+print_sorted_list([]).
+print_sorted_list([C-Name|T]) :-
+    format("- ~w (выбрано раз: ~d)~n", [Name, C]),
+    print_sorted_list(T).
+
+ask_base :-
+    write("Отечественный автомобиль? (да/нет): "), read(C), assertz(answer(country, C)),
+    write("Ваш бюджет (макс. цена в руб): "), read(P), assertz(answer(price, P)),
+    write("Коробка передач (1 - механика, любой другой символ - автомат): "), read(G), assertz(answer(gear, G)),
+    write("Тип кузова (седан/внедорожник/универсал): "), read(B), assertz(answer(body, B)),
+    write("Минимальная мощность (л.с.): "), read(Pow), assertz(answer(power, Pow)),
+    write("Минимальный объем двигателя (л): "), read(V), assertz(answer(volume, V)).
+
+car("Лада Гранта") :- russian, price_low, manual, sedan.
+car("Лада Искра Седан") :- russian, price_low, manual, sedan.
+car("Лада Нива Тревел") :- russian, suv, medium_power.
+car("Лада Веста") :- russian, sedan, medium_power.
+car("УАЗ Патриот") :- russian, suv, high_power.
+car("УАЗ Хантер") :- russian, suv.
+car("Лада Веста Универсал") :- russian, universal, medium_power.
+car("Лада Ларгус") :- russian, price_low, universal.
+
+car("BMW X5") :- foreign, suv, high_power, big_engine.
+car("Toyota Camry") :- foreign, sedan, medium_power.
+car("Volkswagen Polo") :- foreign, price_low, sedan.
+car("Kia Rio") :- foreign, sedan, price_low.
+car("Hyundai Solaris") :- foreign, medium_power, sedan.
+car("Geely Monjaro") :- foreign, suv, automatic, big_engine.
+car("Nissan X-Trail") :- foreign, suv, automatic, big_engine.
+car("Skoda Octavia A8") :- foreign, sedan, medium_power.
+car("Haval Jolion") :- foreign, suv, medium_power, big_engine.
+car("Volkswagen Jetta") :- foreign, sedan, medium_power.
+car("Geely Coolray"):-foreign, suv,  automatic, big_engine.
+car("Volkswagen Passat B9"):-foreign, universal, automatic.
+car("Volvo V90 Cross Country"):-foreign, universal, automatic.
+car("Kia Ceed"):-foreign, universal, manual.
+car("Renault Logan"):-foreign, sedan, price_low, manual.
+
+russian :- answer(country, да).
+foreign :- answer(country, нет).
+
+price_low :- answer(price, P), P>=500000, P =< 1500000.
+
+manual :- answer(gear, 1).
+automatic :- answer(gear, _).
+
+sedan :- answer(body, седан).
+suv :- answer(body, внедорожник).
+universal :- answer(body, универсал).
+
+small_power :- answer(power, P), P =< 90.
+medium_power :- answer(power, P), P>=90, P =< 150.
+high_power :- answer(power, P), P >= 150.
+
+small_volume :- answer(volume, V), V =< 1.8.
+big_engine :- answer(volume, V), V >= 1.8.

@@ -1,0 +1,258 @@
+
+program :-
+    write("Введите логическое выражение, используя следующие операторы:\n"),
+    write("v (ИЛИ), & (И), - (НЕ), -> (ИМПЛИКАЦИЯ)\n"),
+    write("Пример выражения: A & (B v C)\n"),
+    read_line_to_codes(user_input, Codes),
+    string_codes(Input, Codes),
+    process_input(Input).
+
+
+process_input(Input) :-
+    tokenize(Input, Tokens), !,
+    process_tokens(Tokens).
+
+process_input(_) :-
+    writeln('Ошибка: Неправильный формат ввода').
+
+
+process_tokens(Tokens) :-
+    validate_tokens(Tokens), !,
+    process_valid_tokens(Tokens).
+
+process_tokens(_) :-
+    writeln('Ошибка со скобками').
+
+
+process_valid_tokens(Tokens) :-
+    parse_expression(Tokens, Expr), !,
+    process_parsed_expression(Expr).
+
+process_valid_tokens(_) :-
+    writeln('Синтаксическая ошибка в выражении').
+
+
+process_parsed_expression(Expr) :-
+    convert_to_dnf(Expr, DNF),
+    writeln('\nДизъюнктивная нормальная форма (ДНФ): '),
+    write_expression(DNF), nl, nl.
+
+
+tokenize(Input, Tokens) :-
+    string_chars(Input, Chars),
+    tokenize_chars(Chars, Tokens).
+
+tokenize_chars([], []).
+tokenize_chars([' '|T], Tokens) :- tokenize_chars(T, Tokens).
+tokenize_chars(['('|T], ['('|Tokens]) :- tokenize_chars(T, Tokens).
+tokenize_chars([')'|T], [')'|Tokens]) :- tokenize_chars(T, Tokens).
+tokenize_chars(['&'|T], ['&'|Tokens]) :- tokenize_chars(T, Tokens).
+tokenize_chars(['v'|T], ['v'|Tokens]) :- tokenize_chars(T, Tokens).
+
+tokenize_chars(['-'|Chars], Tokens) :-
+     Chars=['>'|Rest],
+     tokenize_chars(Rest,R),
+     Tokens=['->'|R].
+
+tokenize_chars(['-'|Chars],Tokens):-tokenize_chars(Chars,Tokens).
+
+tokenize_chars([Ch|Chars], [Token|Tokens]) :-
+    char_type(Ch, alpha),
+    take_while(alnum, [Ch|Chars], TokenChars, Rest),
+    atom_chars(Token, TokenChars),
+    tokenize_chars(Rest, Tokens).
+
+take_while(_, [], [], []).
+take_while(Type, [Ch|Rest], [Ch|R], Tail) :-
+    (   Type = alnum, (char_type(Ch, alnum); Ch = '_') ),
+    take_while(Type, Rest, R, Tail).
+take_while(_, List, [], List).
+
+validate_tokens(Tokens) :-
+    check_balanced_parentheses(Tokens, 0),
+    check_valid_tokens(Tokens).
+
+check_balanced_parentheses([], 0).
+check_balanced_parentheses(['('|T], N) :-
+    N1 is N + 1,
+    check_balanced_parentheses(T, N1).
+check_balanced_parentheses([')'|T], N) :-
+    N > 0, N1 is N - 1,
+    check_balanced_parentheses(T, N1).
+check_balanced_parentheses([H|T], N) :-
+    H \= '(', H \= ')',
+    check_balanced_parentheses(T, N).
+
+check_valid_tokens([]).
+check_valid_tokens([Token|Tokens]) :-
+    valid_token(Token),
+    check_valid_tokens(Tokens).
+
+valid_token('('). valid_token(')').
+valid_token('&'). valid_token('v'). valid_token('-'). valid_token('->').
+valid_token(Token) :- atom(Token), \+ keyword(Token).
+
+keyword('&'). keyword('v'). keyword('-'). keyword('->').
+
+
+parse_expression(Tokens, Expr) :- phrase(expression(Expr), Tokens).
+
+expression(Expr) --> impl_expr(Expr).
+
+impl_expr(Expr) -->
+    or_expr(L),
+    ['->'],
+    impl_expr(R),
+    { Expr = '->'(L, R) }.
+impl_expr(Expr) --> or_expr(Expr).
+
+or_expr(Expr) -->
+    and_expr(L),
+    or_expr_tail(L, Expr).
+
+or_expr_tail(L, Expr) -->
+    ['v'],
+    and_expr(R),
+    or_expr_tail(v(L, R), Expr).
+or_expr_tail(E, E) --> [].
+
+and_expr(Expr) -->
+    factor(L),
+    and_expr_tail(L, Expr).
+
+and_expr_tail(L, Expr) -->
+    ['&'],
+    factor(R),
+    and_expr_tail(&(L, R), Expr).
+and_expr_tail(E, E) --> [].
+
+factor(-(E)) --> ['-'], factor(E).
+factor(E)     --> primary(E).
+
+primary(E) --> ['('], expression(E), [')'].
+primary(V) --> [V], { atom(V), \+ keyword(V) }.
+
+
+convert_to_dnf(Expr, DNF) :-
+    remove_implications(Expr, E1),
+    apply_demorgan(E1, E2),
+    normalize_or(E2, E3),
+    normalize_and(E3, E4),
+    normalize_or(E4, DNF).
+
+
+remove_implications('->'(A, B), v(-(A1), B1)) :-
+    remove_implications(A, A1),
+    remove_implications(B, B1).
+
+remove_implications(-(A), -(R)) :- !,
+    remove_implications(A, R).
+
+remove_implications(&(A,B), &(A1,B1)) :-
+    remove_implications(A, A1),
+    remove_implications(B, B1).
+
+remove_implications(v(A,B), v(A1,B1)) :-
+    remove_implications(A, A1),
+    remove_implications(B, B1).
+
+remove_implications(A, A).
+
+
+apply_demorgan(-(&(A,B)), v(NA, NB)) :- !,
+    apply_demorgan(-(A), NA),
+    apply_demorgan(-(B), NB).
+
+apply_demorgan(-(v(A,B)), &(NA, NB)) :- !,
+    apply_demorgan(-(A), NA),
+    apply_demorgan(-(B), NB).
+
+apply_demorgan(--(A), R) :- !,
+    apply_demorgan(A, R).
+
+apply_demorgan(&(A,B), &(A1,B1)) :-
+    apply_demorgan(A, A1),
+    apply_demorgan(B, B1).
+
+apply_demorgan(v(A,B), v(A1,B1)) :-
+    apply_demorgan(A, A1),
+    apply_demorgan(B, B1).
+
+apply_demorgan(-(A), -(R)) :-
+    apply_demorgan(A, R).
+
+apply_demorgan(A, A).
+
+
+
+normalize_or(Expr, Result) :-
+    flat_or(Expr, Temp),
+    ( Temp == Expr -> Result = Temp ; normalize_or(Temp, Result) ).
+
+flat_or(v(A, v(B,C)), v(A1, Rest)) :- !,
+    flat_or(A, A1),
+    flat_or(v(B,C), Rest).
+
+flat_or(v(v(A,B), C), v(A1, Rest)) :- !,
+    flat_or(A, A1),
+    flat_or(v(B,C), Rest).
+
+flat_or(&(A,B), &(A1,B1)) :- !,
+    flat_or(A, A1),
+    flat_or(B, B1).
+
+flat_or(v(A,B), v(A1,B1)) :- !,
+    flat_or(A, A1),
+    flat_or(B, B1).
+
+flat_or(-(A), -(A1)) :- !,
+    flat_or(A, A1).
+
+flat_or(A, A).
+
+
+normalize_and(Expr, Result) :-
+    dist_and(Expr, Temp),
+    ( Temp == Expr -> Result = Temp ; normalize_and(Temp, Result) ).
+
+dist_and(&(A, v(B,C)), v(&(A1,B1), &(A1,C1))) :- !,
+    dist_and(A, A1),
+    dist_and(B, B1),
+    dist_and(C, C1).
+
+dist_and(&(v(A,B), C), v(&(A1,C1), &(B1,C1))) :- !,
+    dist_and(A, A1),
+    dist_and(B, B1),
+    dist_and(C, C1).
+
+dist_and(&(A,B), &(A1,B1)) :- !,
+    dist_and(A, A1),
+    dist_and(B, B1).
+
+dist_and(v(A,B), v(A1,B1)) :- !,
+    dist_and(A, A1),
+    dist_and(B, B1).
+
+dist_and(-(A), -(A1)) :- !,
+    dist_and(A, A1).
+
+dist_and(A, A).
+
+
+write_expression(-(E)) :-
+    write('-'),
+    write_expression(E).
+
+write_expression(&(A,B)) :-
+    write('('), write_expression(A), write(' & '),
+    write_expression(B), write(')').
+
+write_expression(v(A,B)) :-
+    write('('), write_expression(A), write(' v '),
+    write_expression(B), write(')').
+
+write_expression('->'(A,B)) :-
+    write('('), write_expression(A), write(' -> '),
+    write_expression(B), write(')').
+
+write_expression(Atom) :- atom(Atom), write(Atom).
